@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-  mem, err := memory.GemRam()
+  mem, err := memory.GetRam()
   if err != nil {
     log.Fatal(err)
   }

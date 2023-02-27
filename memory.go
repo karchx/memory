@@ -38,7 +38,7 @@ func parseMeValue(v string) int {
 	return in
 }
 
-func GemRam() (Ram, error) {
+func GetRam() (Ram, error) {
 	lines, err := readLines(MemInfo, 16)
 	if err != nil {
 		return Ram{}, err
