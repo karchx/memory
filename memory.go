@@ -1,9 +1,6 @@
 package memory
 
 import (
-	"bufio"
-	"math"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -57,38 +54,22 @@ func GetRam() (Ram, error) {
 }
 
 func GetTotalRam() (int, error) {
-  line, err := readFirstLine(MemInfo)
-  if err != nil {
-    return 0, err
-  }
-
-  return parseMeValue(line), nil
-}
-
-func readLines(s string, n int) ([]string, error) {
-	f, err := os.Open(s)
+	line, err := readFirstLine(MemInfo)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
-	defer f.Close()
 
-	lines := make([]string, 0, n)
-	sc := bufio.NewScanner(f)
-	for i := 0; i < n && sc.Scan(); i++ {
-		lines = append(lines, sc.Text())
-	}
-	return lines, nil
+	return parseMeValue(line), nil
 }
 
-func readFirstLine(s string) (string, error) {
-  f, err := os.Open(s)
-  if err != nil {
-    return "", err
-  }
-  defer f.Close()
-  sc := bufio.NewScanner(f)
-  sc.Scan()
-  return sc.Text(), nil
+// GetFreeRam ram amount
+func GetFreeRam() (int, error) {
+	line, err := readLine(MemInfo, 2)
+	if err != nil {
+		return 0, err
+	}
+
+	return parseMeValue(line), nil
 }
 
 // ConverBytes return memory in MG|GB with base in bytes
@@ -102,8 +83,4 @@ func ConverBytes(n int, prefix string) float64 {
 		return float64(0.0)
 	}
 
-}
-
-func truncateResult(n float64) float64 {
-	return math.Trunc(n*10) / 10
 }
