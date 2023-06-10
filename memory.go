@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -74,12 +75,21 @@ func GetFreeRam() (int, error) {
 
 // GetAvalibleRam ram amount
 func GetAvalibleRam() (int, error) {
-  line, err := readLine(MemInfo, 3)
-  if err != nil {
-    return 0, err
-  }
+	line, err := readLine(MemInfo, 3)
+	if err != nil {
+		return 0, err
+	}
 
-  return parseMeValue(line), nil
+	return parseMeValue(line), nil
+}
+
+func GetSwapFree() (int, error) {
+	fmt.Printf("[DEBUG]: %v", MemInfo)
+	line, err := readLine(MemInfo, 16)
+	if err != nil {
+		return 0, err
+	}
+	return parseMeValue(line), nil
 }
 
 // ConverBytes return memory in MG|GB with base in bytes
