@@ -72,6 +72,16 @@ func GetFreeRam() (int, error) {
 	return parseMeValue(line), nil
 }
 
+// GetAvalibleRam ram amount
+func GetAvalibleRam() (int, error) {
+  line, err := readLine(MemInfo, 3)
+  if err != nil {
+    return 0, err
+  }
+
+  return parseMeValue(line), nil
+}
+
 // ConverBytes return memory in MG|GB with base in bytes
 func ConverBytes(n int, prefix string) float64 {
 	switch prefix {
