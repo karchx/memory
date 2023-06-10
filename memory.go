@@ -38,6 +38,7 @@ func parseMeValue(v string) int {
 	return in
 }
 
+// get Ram from /proc/meminfo
 func GetRam() (Ram, error) {
 	lines, err := readLines(MemInfo, 16)
 	if err != nil {
@@ -45,7 +46,7 @@ func GetRam() (Ram, error) {
 	}
 
 	ram := Ram{
-		Total:     converBytes(parseMeValue(lines[0]), "GB"),
+		Total:     ConverBytes(parseMeValue(lines[0]), "GB"),
 		Free:      parseMeValue(lines[1]),
 		Available: parseMeValue(lines[2]),
 		SwapTotal: parseMeValue(lines[14]),
@@ -53,6 +54,15 @@ func GetRam() (Ram, error) {
 	}
 
 	return ram, nil
+}
+
+func GetTotalRam() (int, error) {
+  line, err := readFirstLine(MemInfo)
+  if err != nil {
+    return 0, err
+  }
+
+  return parseMeValue(line), nil
 }
 
 func readLines(s string, n int) ([]string, error) {
@@ -70,7 +80,19 @@ func readLines(s string, n int) ([]string, error) {
 	return lines, nil
 }
 
-func converBytes(n int, prefix string) float64 {
+func readFirstLine(s string) (string, error) {
+  f, err := os.Open(s)
+  if err != nil {
+    return "", err
+  }
+  defer f.Close()
+  sc := bufio.NewScanner(f)
+  sc.Scan()
+  return sc.Text(), nil
+}
+
+// ConverBytes return memory in MG|GB with base in bytes
+func ConverBytes(n int, prefix string) float64 {
 	switch prefix {
 	case "MB":
 		return truncateResult(float64(n) / (1 << 10))
